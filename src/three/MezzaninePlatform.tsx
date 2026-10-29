@@ -1,7 +1,5 @@
 'use client'
 
-import * as THREE from 'three'
-
 /**
  * Mezzanine platform with support pillars and safety yellow handrails
  * Recreates the elevated sorting deck seen in Reference Image 1.
@@ -21,7 +19,7 @@ export default function MezzaninePlatform() {
         [3.2, 0, 2.5],
         [0, 0, -2.5],
         [0, 0, 2.5],
-      ].map(([x, y, z], i) => (
+      ].map(([x, , z], i) => (
         <group key={`col-${i}`} position={[x, 1.4, z]}>
           <mesh castShadow receiveShadow>
             <cylinderGeometry args={[0.12, 0.12, 2.8, 16]} />

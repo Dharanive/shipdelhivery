@@ -5,22 +5,15 @@ import Link from 'next/link'
 import { motion, useScroll, useTransform } from 'motion/react'
 import {
   ChevronRight,
-  RotateCw,
+  ArrowRight,
   Compass,
-  Layers,
-  Sparkles,
-  Maximize2,
   MousePointerClick,
-  Truck,
-  Building2,
-  Box,
-  Send,
+  Clock,
 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import TrackingForm from '@/components/tracking/TrackingForm'
 import type { WarehouseZoneId } from '@/three/WarehouseCamera'
 
-// Dynamically load the 3D scene with SSR disabled for WebGL
 const WarehouseScene = dynamic(
   () => import('@/three/WarehouseScene'),
   {
@@ -31,238 +24,180 @@ const WarehouseScene = dynamic(
 
 function SceneLoadingSkeleton() {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-4 bg-[#0B1220]/40">
-      <div className="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
-      </div>
-      <p className="text-xs font-mono tracking-wider uppercase text-sky-300">
-        Initializing 3D Engine…
+    <div className="w-full h-full flex flex-col items-center justify-center gap-3 bg-[#F8FAFC]">
+      <div className="w-10 h-10 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      <p className="text-xs font-mono uppercase tracking-wider text-slate-500">
+        Loading 3D Logistics Campus…
       </p>
     </div>
   )
 }
 
-const ZONE_BUTTONS: {
-  id: WarehouseZoneId
-  label: string
-  code: string
-  icon: React.ElementType
-}[] = [
-  { id: 'all', label: 'Full Facility', code: 'ALL', icon: Layers },
-  { id: 'intake', label: 'Inbound Dock', code: 'Z-01', icon: Truck },
-  { id: 'sorting', label: 'Optical Sorter', code: 'Z-02', icon: Box },
-  { id: 'racks', label: 'Storage Racks', code: 'Z-03', icon: Building2 },
-  { id: 'dispatch', label: 'Outbound Fleet', code: 'Z-04', icon: Send },
-]
-
 export default function HeroSection() {
   const heroRef = useRef<HTMLDivElement>(null)
-  const { scrollY } = useScroll()
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
-  const [activeZone, setActiveZone] = useState<WarehouseZoneId>('all')
-  const [autoRotate, setAutoRotate] = useState(false)
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  })
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  })
+  const [cameraMode, setCameraMode] = useState<'scroll' | 'orbit'>('scroll')
+  const [activeZone] = useState<WarehouseZoneId>('all')
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReducedMotion(mq.matches)
     const onChange = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)
   }, [])
 
-  const contentY = useTransform(scrollY, [0, 500], [0, prefersReducedMotion ? 0 : -30])
-  const opacity = useTransform(scrollY, [0, 450], [1, 0])
+  // Smooth scroll animations for UI content
+  const heroTextOpacity = useTransform(scrollYProgress, [0, 0.45], [1, 0])
+  const heroTextY = useTransform(scrollYProgress, [0, 0.45], [0, -40])
 
   return (
     <section
       ref={heroRef}
-      className="relative min-h-[100svh] flex flex-col justify-between overflow-hidden bg-[#0B1220]"
+      className="relative min-h-[110vh] bg-[#F8FAFC] overflow-hidden"
     >
       {/* ─────────────────────────────────────────────────────────────
-          Full-Bleed World-Class 3D Warehouse Canvas with Mouse Control
+          1. 3D Logistics Campus Canvas (Fixed Background during scroll)
       ────────────────────────────────────────────────────────────── */}
-      <div className="absolute inset-0 z-0">
+      <div className="sticky top-0 h-screen w-full z-0 overflow-hidden">
         <WarehouseScene
           reducedMotion={prefersReducedMotion}
           activeZone={activeZone}
-          autoRotate={autoRotate}
+          useScrollCamera={cameraMode === 'scroll'}
         />
-      </div>
 
-      {/* Radial ambient glow accents */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-sky-500/10 blur-[140px] pointer-events-none z-[1]" />
-      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-cyan-500/10 blur-[120px] pointer-events-none z-[1]" />
+        {/* Soft edge gradients so 3D scene fades cleanly into UI */}
+        <div className="absolute inset-y-0 left-0 w-full sm:w-[50%] bg-gradient-to-r from-[#F8FAFC] via-[#F8FAFC]/80 to-transparent pointer-events-none z-[1]" />
+        <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#F8FAFC] to-transparent pointer-events-none z-[1]" />
 
-      {/* Left-side subtle shadow gradient for text contrast */}
-      <div className="absolute inset-y-0 left-0 w-full md:w-[60%] bg-gradient-to-r from-[#0B1220]/95 via-[#0B1220]/75 to-transparent pointer-events-none z-[2]" />
-      {/* Bottom fade into next section */}
-      <div className="absolute bottom-0 inset-x-0 h-28 bg-gradient-to-t from-[#0B1220] to-transparent pointer-events-none z-[2]" />
-
-      {/* ─────────────────────────────────────────────────────────────
-          Interactive 3D Mouse Controls HUD (Top Right)
-      ────────────────────────────────────────────────────────────── */}
-      <div className="absolute top-24 right-4 sm:right-8 z-20 flex flex-col items-end gap-2 pointer-events-auto">
-        <div className="flex items-center gap-2 bg-[#0B1220]/80 backdrop-blur-xl border border-white/10 rounded-xl p-1.5 shadow-xl">
-          <div className="flex items-center gap-1.5 px-2 py-1 text-[11px] font-mono text-slate-300">
-            <MousePointerClick size={13} className="text-sky-400" />
-            <span className="hidden sm:inline">Drag to Orbit • Scroll to Zoom</span>
-            <span className="sm:hidden">Touch 3D Orbit</span>
+        {/* ─────────────────────────────────────────────────────────────
+            Interactive Camera Mode Pill (Top Right)
+        ────────────────────────────────────────────────────────────── */}
+        <div className="absolute top-24 right-4 sm:right-8 z-20 flex items-center gap-2">
+          <div className="bg-white/90 backdrop-blur-xl border border-slate-200/80 rounded-2xl p-1.5 shadow-lg flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setCameraMode('scroll')}
+              className={`text-xs px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+                cameraMode === 'scroll'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <Compass size={13} />
+              <span>Scroll Director</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setCameraMode('orbit')}
+              className={`text-xs px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+                cameraMode === 'orbit'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <MousePointerClick size={13} />
+              <span>Free 3D Orbit</span>
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => setAutoRotate(!autoRotate)}
-            className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
-              autoRotate
-                ? 'bg-sky-500 text-slate-950 font-semibold shadow-md shadow-sky-500/30'
-                : 'text-slate-300 hover:text-white hover:bg-white/5'
-            }`}
-            title="Toggle Continuous Turntable Rotation"
-          >
-            <RotateCw size={12} className={autoRotate ? 'animate-spin' : ''} />
-            <span className="hidden sm:inline">Auto Spin</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveZone('all')}
-            className="px-2.5 py-1 text-xs font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
-            title="Reset Camera to Overview"
-          >
-            <Maximize2 size={12} />
-            <span className="hidden sm:inline">Reset</span>
-          </button>
         </div>
+
+        {/* ─────────────────────────────────────────────────────────────
+            Floating Telemetry Pill Cards (Inspired by Reference Image 1 & 2)
+        ────────────────────────────────────────────────────────────── */}
+        {/* Floating Inbound Delivery Status Card (Top-Right Floating) */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="hidden lg:flex absolute top-40 right-8 z-10 w-72 p-4 rounded-2xl bg-white/90 backdrop-blur-xl border border-slate-200 shadow-xl shadow-slate-900/5 flex-col gap-2"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-semibold">
+              Live Inbound Telemetry
+            </span>
+            <span className="badge badge-royal text-[10px] py-0.5 px-2">
+              ● IN TRANSIT
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between mt-1">
+            <span className="font-mono text-xs text-slate-600">Shipment TRK-78429</span>
+            <span className="font-extrabold text-lg text-slate-900 font-mono">10:24 AM</span>
+          </div>
+          {/* Mini Barcode Progress Indicator */}
+          <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden mt-1">
+            <div className="w-[72%] h-full bg-blue-600 rounded-full" />
+          </div>
+          <p className="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
+            <Clock size={12} className="text-blue-600" />
+            <span>Dock A · Conveyor transfer active</span>
+          </p>
+        </motion.div>
       </div>
 
       {/* ─────────────────────────────────────────────────────────────
-          Hero Content Layer (Left Aligned)
+          2. Hero Foreground Content Layer
       ────────────────────────────────────────────────────────────── */}
       <motion.div
-        className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-8 pt-32 sm:pt-36 pb-12 flex-1 flex flex-col justify-center pointer-events-none"
-        style={{ y: contentY, opacity }}
+        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 -mt-[100vh] min-h-screen flex flex-col justify-center pointer-events-none"
+        style={{ opacity: heroTextOpacity, y: heroTextY }}
       >
-        <div className="max-w-xl pointer-events-auto">
-          {/* Status Chip */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 border border-sky-400/30 backdrop-blur-md mb-6 shadow-lg shadow-sky-500/10"
-          >
+        <div className="max-w-xl pointer-events-auto pt-20">
+          {/* Status Badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 mb-6">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-400" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600" />
             </span>
-            <span className="text-xs font-semibold tracking-wider text-sky-300 uppercase font-mono">
-              Next-Gen Autonomous Logistics
+            <span className="text-xs font-bold tracking-wide font-mono uppercase">
+              Connected 3D Fleet Network
             </span>
-          </motion.div>
+          </div>
 
           {/* Main Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.6 }}
-            className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-[1.08] mb-6 drop-shadow-sm"
-          >
-            Every Parcel. <br />
-            Every Mile. <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-cyan-300 to-indigo-300">
-              In Motion.
+          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.08] mb-5">
+            Logistics Made{' '}
+            <span className="inline-flex items-center text-blue-600">
+              <ArrowRight className="inline-block mx-1 w-8 h-8 sm:w-12 sm:h-12" strokeWidth={2.8} />
+              Easy.
             </span>
-          </motion.h1>
+          </h1>
 
           {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.55 }}
-            className="text-base sm:text-lg text-slate-300 mb-8 leading-relaxed max-w-lg"
-          >
-            Track real-time consignments across smart sorting hubs, automated conveyor routes,
-            and confirmed delivery milestones in one connected platform.
-          </motion.p>
+          <p className="text-base sm:text-lg text-slate-600 mb-8 leading-relaxed max-w-lg">
+            Track consignments, explore smarter sorting hubs, and follow every delivery truck
+            milestone from warehouse to doorstep in real time.
+          </p>
 
-          {/* World-Class Tracking Input Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.55 }}
-            className="mb-8"
-          >
-            <div className="p-3 sm:p-4 rounded-2xl bg-slate-900/85 backdrop-blur-2xl border border-sky-500/20 shadow-2xl shadow-black/60">
-              <TrackingForm variant="hero" />
-            </div>
-          </motion.div>
+          {/* Clean White Floating Tracking Card */}
+          <div className="mb-8 p-3 sm:p-4 rounded-2xl bg-white border border-slate-200 shadow-xl shadow-slate-900/5">
+            <TrackingForm variant="hero" />
+          </div>
 
           {/* Action CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            className="flex flex-wrap items-center gap-3 mb-8"
-          >
-            <Link
-              href="/track"
-              className="btn btn-primary text-sm py-3 px-6 shadow-lg shadow-sky-500/30"
-            >
+          <div className="flex flex-wrap items-center gap-3">
+            <Link href="/track" className="btn btn-royal">
               <span>Track Consignment</span>
               <ChevronRight size={16} />
             </Link>
-            <Link
-              href="/services"
-              className="btn btn-secondary text-sm py-3 px-6"
-            >
-              Explore Network
+            <Link href="/services" className="btn btn-outline">
+              Explore Our Network
             </Link>
-          </motion.div>
+          </div>
 
-          {/* Interactive 3D Facility Zone Navigator */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            className="p-3 rounded-2xl bg-[#0B1220]/80 backdrop-blur-xl border border-white/10"
-          >
-            <div className="flex items-center justify-between mb-2 px-1">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                <Compass size={13} className="text-sky-400" />
-                Inspect Facility Zones
-              </span>
-              <span className="text-[10px] text-slate-500 font-mono">
-                Click zone to fly camera
-              </span>
+          {/* Scroll Direction Hint */}
+          <div className="mt-10 flex items-center gap-2 text-xs font-mono text-slate-400">
+            <div className="w-4 h-6 rounded-full border border-slate-300 flex items-start justify-center p-1">
+              <div className="w-1 h-1.5 rounded-full bg-blue-600 animate-bounce" />
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
-              {ZONE_BUTTONS.map(({ id, label, code, icon: Icon }) => {
-                const isCurrent = activeZone === id
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    onClick={() => setActiveZone(id)}
-                    className={`px-2 py-2 rounded-xl text-left transition-all cursor-pointer flex flex-col gap-1 border ${
-                      isCurrent
-                        ? 'bg-gradient-to-br from-sky-500/25 to-cyan-500/10 border-sky-400 text-white shadow-md shadow-sky-500/20'
-                        : 'bg-white/5 border-white/5 text-slate-400 hover:text-white hover:bg-white/10 hover:border-white/10'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between w-full">
-                      <Icon
-                        size={14}
-                        className={isCurrent ? 'text-sky-400' : 'text-slate-400'}
-                      />
-                      <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-black/40 text-slate-300">
-                        {code}
-                      </span>
-                    </div>
-                    <span className="text-xs font-semibold leading-tight line-clamp-1">
-                      {label}
-                    </span>
-                  </button>
-                )
-              })}
-            </div>
-          </motion.div>
+            <span>Scroll down to navigate facility & moving trucks</span>
+          </div>
         </div>
       </motion.div>
     </section>

@@ -6,10 +6,10 @@ import { useRef } from 'react'
 import { Activity, ShieldCheck, Zap, Globe } from 'lucide-react'
 
 const STATS = [
-  { value: '2.4M+', label: 'Consignments Tracked', icon: Activity, detail: 'Across 48 hub corridors' },
-  { value: '99.2%', label: 'Scan Accuracy', icon: ShieldCheck, detail: 'Laser barcode dimensioning' },
-  { value: '450+', label: 'Automated Hubs', icon: Globe, detail: 'Tier-1 & metro coverage' },
-  { value: '< 18ms', label: 'Telemetry Latency', icon: Zap, detail: 'Real-time WebSocket sync' },
+  { value: '2.4M+', label: 'Consignments Delivered', icon: Activity, detail: 'Across 48 hub transit corridors' },
+  { value: '99.4%', label: 'On-Time Reconciliation', icon: ShieldCheck, detail: 'Automated dock dispatch scans' },
+  { value: '520+', label: 'Connected Fleet Trucks', icon: Globe, detail: 'Real-time telemetry tracking' },
+  { value: '< 15min', label: 'Cross-Dock Turnaround', icon: Zap, detail: 'High-speed automated sorting' },
 ]
 
 export default function StatsSection() {
@@ -17,7 +17,7 @@ export default function StatsSection() {
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
   return (
-    <section className="relative py-16 bg-[#0B1220] border-y border-white/5">
+    <section className="relative py-20 bg-white border-y border-slate-200/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div
           ref={ref}
@@ -29,21 +29,18 @@ export default function StatsSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.08, duration: 0.5 }}
-              className="p-6 rounded-2xl bg-slate-900/60 border border-white/5 backdrop-blur-md relative overflow-hidden group hover:border-sky-500/30 transition-all shadow-xl"
+              className="p-7 rounded-2xl bg-slate-50/70 border border-slate-200/70 relative overflow-hidden group hover:border-blue-500/40 hover:bg-white hover:shadow-xl hover:shadow-blue-500/5 transition-all"
             >
-              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-25 transition-opacity text-sky-400">
-                <Icon size={44} />
+              <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200/60 flex items-center justify-center mb-4 text-blue-600">
+                <Icon size={18} strokeWidth={2.4} />
               </div>
-              <div className="flex items-center gap-2 mb-2 text-sky-400">
-                <Icon size={16} />
-                <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400">
-                  {label}
-                </span>
-              </div>
-              <p className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-1 font-mono">
+              <p className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-1 font-mono">
                 {value}
               </p>
-              <p className="text-xs text-slate-400">
+              <p className="text-sm font-semibold text-slate-700 mb-1">
+                {label}
+              </p>
+              <p className="text-xs text-slate-500">
                 {detail}
               </p>
             </motion.div>

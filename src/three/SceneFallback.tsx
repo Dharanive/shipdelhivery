@@ -1,88 +1,76 @@
-// CSS-only isometric fallback when WebGL is unavailable
+'use client'
 
+import { Box, Truck, Building2, CheckCircle2 } from 'lucide-react'
+
+/**
+ * Premium WebGL Fallback Card
+ * Rendered when WebGL is unsupported or disabled, matching the stylized
+ * white-and-blue miniature logistics aesthetic of the live 3D campus.
+ */
 export default function SceneFallback() {
   return (
     <div
-      className="w-full h-full flex items-center justify-center"
+      className="w-full h-full flex flex-col items-center justify-center p-6 bg-[#F8FAFC]"
       role="img"
-      aria-label="Stylized warehouse illustration"
+      aria-label="Stylized isometric miniature logistics facility illustration"
     >
-      <div className="relative w-full max-w-sm" style={{ perspective: '800px' }}>
-        {/* Isometric CSS warehouse illustration */}
-        <div
-          style={{
-            transform: 'rotateX(45deg) rotateZ(-45deg)',
-            transformStyle: 'preserve-3d',
-            width: '200px',
-            height: '200px',
-            margin: '0 auto',
-          }}
-        >
-          {/* Floor */}
-          <div
-            style={{
-              position: 'absolute',
-              width: '200px',
-              height: '200px',
-              background: '#E8E4DC',
-              border: '1px solid #D4CFC6',
-            }}
-          />
-          {/* Conveyor strip */}
-          <div
-            style={{
-              position: 'absolute',
-              top: '60px',
-              left: '20px',
-              width: '160px',
-              height: '18px',
-              background: '#142238',
-              borderRadius: '2px',
-            }}
-          />
-          {/* Box on conveyor */}
-          <div
-            style={{
-              position: 'absolute',
-              top: '54px',
-              left: '80px',
-              width: '22px',
-              height: '22px',
-              background: '#D4A574',
-              border: '1px solid #C49060',
-            }}
-          />
-          {/* Rack */}
-          <div
-            style={{
-              position: 'absolute',
-              top: '20px',
-              left: '20px',
-              width: '40px',
-              height: '70px',
-              background: '#8B9EB7',
-              border: '1px solid #6B82A0',
-            }}
-          />
-          {/* Truck */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '20px',
-              right: '20px',
-              width: '60px',
-              height: '30px',
-              background: '#142238',
-              borderRadius: '2px',
-            }}
-          />
+      <div className="relative w-full max-w-md p-6 rounded-3xl bg-white/95 border border-slate-200/90 shadow-xl shadow-slate-900/5 flex flex-col items-center text-center">
+        {/* Isometric Stylized Logistics Graphic */}
+        <div className="relative w-48 h-40 mb-4 flex items-center justify-center">
+          {/* Base Plinth SVG */}
+          <svg viewBox="0 0 200 160" className="w-full h-full overflow-visible drop-shadow-md">
+            {/* Ground Diroama Slab */}
+            <polygon points="100,10 190,55 100,100 10,55" fill="#F1F5F9" stroke="#E2E8F0" strokeWidth="2" />
+            <polygon points="10,55 100,100 100,120 10,75" fill="#E2E8F0" />
+            <polygon points="190,55 100,100 100,120 190,75" fill="#CBD5E1" />
+
+            {/* Asphalt Road Ring */}
+            <polygon points="100,28 170,62 100,92 30,58" fill="#334155" />
+            <polygon points="100,38 150,62 100,82 50,58" fill="#F8FAFC" />
+
+            {/* Main Super-Hub Building */}
+            <polygon points="120,40 160,20 160,50 120,70" fill="#2563EB" />
+            <polygon points="120,70 160,50 160,75 120,95" fill="#1D4ED8" />
+            <polygon points="80,50 120,70 120,95 80,75" fill="#FFFFFF" stroke="#E2E8F0" />
+            {/* White Quad Roof */}
+            <polygon points="80,50 120,70 160,50 120,30" fill="#FFFFFF" stroke="#CBD5E1" />
+
+            {/* Delivery Truck */}
+            <polygon points="45,65 65,55 65,70 45,80" fill="#0284C7" />
+            <polygon points="65,55 85,65 85,80 65,70" fill="#1E40AF" />
+          </svg>
         </div>
 
-        <p className="text-center mt-8 text-sm" style={{ color: 'var(--color-text-dim)' }}>
-          3D scene unavailable — WebGL not supported in this browser.
+        {/* Status Chip */}
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-mono font-semibold mb-2">
+          <CheckCircle2 size={13} className="text-blue-600" />
+          <span>FACILITY ONLINE · 2D ENGINE</span>
+        </div>
+
+        <h3 className="text-base font-bold text-slate-900 mb-1">
+          Interactive Logistics Fleet
+        </h3>
+        <p className="text-xs text-slate-500 max-w-xs leading-relaxed">
+          Full shipment tracking, sorting hub telemetry, and network operations are active.
+          Hardware 3D acceleration is currently disabled or unsupported.
         </p>
+
+        {/* Feature Highlights */}
+        <div className="grid grid-cols-3 gap-2 w-full mt-4 pt-4 border-t border-slate-100">
+          <div className="flex flex-col items-center gap-1 text-[11px] text-slate-600">
+            <Building2 size={15} className="text-blue-600" />
+            <span>Smart Hub</span>
+          </div>
+          <div className="flex flex-col items-center gap-1 text-[11px] text-slate-600">
+            <Box size={15} className="text-blue-600" />
+            <span>Auto Sort</span>
+          </div>
+          <div className="flex flex-col items-center gap-1 text-[11px] text-slate-600">
+            <Truck size={15} className="text-blue-600" />
+            <span>Fast Fleet</span>
+          </div>
+        </div>
       </div>
     </div>
   )
 }
-

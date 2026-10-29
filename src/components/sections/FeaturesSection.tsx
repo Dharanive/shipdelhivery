@@ -11,25 +11,25 @@ const PILLARS = [
     icon: Shield,
     title: 'PostgreSQL Row-Level Security',
     description:
-      'Role-governed database access policies ensuring staff only operate on assigned hub consignments.',
+      'Role-governed database access policies ensuring warehouse staff only access assigned consignment records.',
   },
   {
     icon: Zap,
-    title: 'Sub-Second Event Dispatch',
+    title: 'Atomic Event Recording',
     description:
-      'Atomic database updates linking checkpoint status transitions directly with audit logs.',
+      'Zero-loss transactional updates linking delivery milestone status changes directly to audit logs.',
   },
   {
     icon: BarChart3,
-    title: 'Operational Telemetry',
+    title: 'Fleet & Dock Telemetry',
     description:
-      'Live dashboard with hub throughput, sorting queue depth, exception rates, and driver handoffs.',
+      'Real-time operational dashboards for warehouse intake queues, in-transit fleet coordinates, and hub loading throughput.',
   },
   {
     icon: Clock,
-    title: 'Tamper-Evident History',
+    title: 'Chronological Audit Trail',
     description:
-      'Permanent, chronologically ordered tracking timeline with verified location tags.',
+      'Sanitized public tracking timeline with verified checkpoints, timestamps, and origin-to-destination journeys.',
   },
 ]
 
@@ -38,7 +38,7 @@ export default function FeaturesSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section className="py-24 bg-gradient-to-b from-[#0B1220] via-[#0D182B] to-[#0B1220] relative overflow-hidden border-t border-white/5">
+    <section className="py-24 bg-white relative overflow-hidden border-t border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Column */}
@@ -48,34 +48,35 @@ export default function FeaturesSection() {
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6 }}
           >
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono font-semibold tracking-wider uppercase bg-sky-500/10 border border-sky-400/20 text-sky-400 mb-4">
-              Architecture & Security
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono font-semibold tracking-wider uppercase bg-blue-50 border border-blue-200 text-blue-700 mb-4">
+              Security & Reliability
             </span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-6">
-              Industrial Grade. <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-cyan-300 to-indigo-300">
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6">
+              Industrial Precision. <br />
+              <span className="text-blue-600">
                 Connected Operations.
               </span>
             </h2>
-            <p className="text-slate-400 text-base leading-relaxed mb-8">
-              ShipDelhivery bridges modern 3D visualization with production PostgreSQL workflows,
-              enforcing server-side validation, zero-trust role policies, and resilient failover.
+            <p className="text-slate-600 text-base leading-relaxed mb-8">
+              ShipDelhivery pairs photorealistic 3D logistics twins with enterprise PostgreSQL
+              architecture, guaranteeing strict authorization, zero PII leaks, and verifiable
+              auditability.
             </p>
 
             <div className="space-y-3 mb-8">
               {[
                 'Zero external paid APIs or commercial licensing fees',
-                'WebGL hardware acceleration with accessible CSS-only fallbacks',
-                'Reduced-motion accessibility compliance out of the box',
+                'GPU-accelerated WebGL with seamless CSS fallback',
+                'Scroll-reactive 3D cameras and smooth section transitions',
               ].map((item) => (
-                <div key={item} className="flex items-center gap-3 text-sm text-slate-300">
-                  <CheckCircle2 size={16} className="text-sky-400 flex-shrink-0" />
+                <div key={item} className="flex items-center gap-3 text-sm text-slate-700">
+                  <CheckCircle2 size={16} className="text-blue-600 flex-shrink-0" />
                   <span>{item}</span>
                 </div>
               ))}
             </div>
 
-            <Link href="/track" className="btn btn-orange py-3 px-6 text-sm">
+            <Link href="/track" className="btn btn-royal py-3 px-6 text-sm">
               <span>Experience Real-Time Tracking</span>
               <ArrowRight size={16} />
             </Link>
@@ -89,15 +90,15 @@ export default function FeaturesSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.1 + i * 0.08, duration: 0.5 }}
-                className="p-6 rounded-2xl bg-slate-900/70 border border-white/5 backdrop-blur-md shadow-xl hover:border-sky-500/30 transition-colors"
+                className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 shadow-sm hover:shadow-lg hover:border-blue-500/30 transition-all"
               >
-                <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-400/20 flex items-center justify-center mb-4 text-sky-400">
-                  <Icon size={20} />
+                <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200/60 flex items-center justify-center mb-4 text-blue-600">
+                  <Icon size={18} strokeWidth={2.4} />
                 </div>
-                <h3 className="text-base font-bold text-white mb-2">
+                <h3 className="text-base font-bold text-slate-900 mb-2">
                   {title}
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   {description}
                 </p>
               </motion.div>

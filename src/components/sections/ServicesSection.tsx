@@ -11,63 +11,50 @@ import {
   Truck,
   Globe,
   ScanLine,
-  ArrowUpRight,
 } from 'lucide-react'
 
 const SERVICES = [
   {
-    icon: Package,
-    title: 'Parcel Delivery & Last-Mile',
+    icon: Truck,
+    title: 'Inter-City Linehaul Fleet',
     description:
-      'High-velocity door-to-door delivery with milestone confirmation, geo-fenced handovers, and recipient notifications.',
-    gradient: 'from-sky-500/20 to-blue-500/5',
-    border: 'hover:border-sky-500/40',
-    iconColor: 'text-sky-400',
+      'High-velocity delivery trucks connecting central distribution hubs to city depots with real-time route telemetry.',
+    tag: 'Fleet Network',
   },
   {
     icon: Building2,
-    title: 'Intelligent Sorting Hubs',
+    title: 'Automated Sorting Hubs',
     description:
-      'Automated cross-dock facilities with optical laser scanning, high-speed divert conveyors, and zone load balancing.',
-    gradient: 'from-amber-500/20 to-orange-500/5',
-    border: 'hover:border-amber-500/40',
-    iconColor: 'text-amber-400',
+      'Architectural cross-dock facilities with optical laser scanning tunnels, high-speed divert conveyors, and zone routing.',
+    tag: 'Sorting Deck',
   },
   {
-    icon: Truck,
-    title: 'Linehaul & Hub Transfers',
+    icon: Package,
+    title: 'Last-Mile Delivery',
     description:
-      'Scheduled inter-city truck networks with manifest reconciliation, sealed trailer tracking, and dynamic routing.',
-    gradient: 'from-cyan-500/20 to-teal-500/5',
-    border: 'hover:border-cyan-500/40',
-    iconColor: 'text-cyan-400',
+      'Doorstep delivery with confirmed milestone timestamps, recipient handoffs, and instant digital proof of delivery.',
+    tag: 'Doorstep',
   },
   {
     icon: ScanLine,
-    title: 'Barcode & RFID Ingestion',
+    title: 'Optical Laser Dimensioning',
     description:
-      'Multi-axis laser dimensioners and high-speed tunnel scanners ensuring instant consignment verification.',
-    gradient: 'from-indigo-500/20 to-violet-500/5',
-    border: 'hover:border-indigo-500/40',
-    iconColor: 'text-indigo-400',
+      'Multi-axis conveyor scanning tunnels measuring package weight and volume to optimize fleet payload distribution.',
+    tag: 'Automated Scan',
   },
   {
     icon: Globe,
-    title: 'National Distribution Network',
+    title: 'National Hub Infrastructure',
     description:
-      'Spanning Tier-1 hubs and emerging commercial clusters across India with sub-24hr transit corridors.',
-    gradient: 'from-emerald-500/20 to-teal-500/5',
-    border: 'hover:border-emerald-500/40',
-    iconColor: 'text-emerald-400',
+      'Spanning major metros and commercial corridors across India with scheduled departure windows.',
+    tag: 'Coverage',
   },
   {
     icon: Building2,
-    title: 'Enterprise B2B Logistics',
+    title: 'Enterprise Dispatch Operations',
     description:
-      'Bulk manifest creation, automated dispatch schedules, dedicated staff queues, and comprehensive audit logs.',
-    gradient: 'from-rose-500/20 to-pink-500/5',
-    border: 'hover:border-rose-500/40',
-    iconColor: 'text-rose-400',
+      'Dedicated warehouse queues, barcode scanning terminals, role authorization, and complete audit history.',
+    tag: 'Enterprise',
   },
 ]
 
@@ -76,7 +63,7 @@ export default function ServicesSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section className="py-24 bg-[#0B1220] relative overflow-hidden">
+    <section className="py-24 bg-[#F8FAFC] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         {/* Section Header */}
         <motion.div
@@ -86,38 +73,43 @@ export default function ServicesSection() {
           className="text-center max-w-2xl mx-auto mb-16"
           ref={ref}
         >
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-mono font-semibold tracking-wider uppercase bg-sky-500/10 border border-sky-400/20 text-sky-400 mb-4">
-            Network Capabilities
+          <span className="inline-block px-3 py-1 rounded-full text-xs font-mono font-semibold tracking-wider uppercase bg-blue-50 border border-blue-200 text-blue-700 mb-4">
+            End-To-End Infrastructure
           </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
-            Autonomous Logistics <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-300">
-              Engineered for Scale
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
+            Autonomous Logistics, <br />
+            <span className="text-blue-600">
+              Synchronized in Real Time
             </span>
           </h2>
-          <p className="text-slate-400 text-base leading-relaxed">
-            From the initial loading dock scan to the final recipient signature, every stage of
-            the parcel journey is synchronized.
+          <p className="text-slate-600 text-base leading-relaxed">
+            From the warehouse conveyor bridge into the freight delivery truck, every confirmed
+            milestone is recorded and verified.
           </p>
         </motion.div>
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {SERVICES.map(({ icon: Icon, title, description, gradient, border, iconColor }, i) => (
+          {SERVICES.map(({ icon: Icon, title, description, tag }, i) => (
             <motion.div
               key={title}
               initial={{ opacity: 0, y: 24 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.05 + i * 0.07, duration: 0.5 }}
-              className={`p-7 rounded-2xl bg-gradient-to-b ${gradient} bg-slate-900/60 border border-white/5 backdrop-blur-md transition-all group ${border} shadow-xl hover:-translate-y-1`}
+              className="p-7 rounded-2xl bg-white border border-slate-200/80 shadow-md shadow-slate-900/3 hover:shadow-xl hover:shadow-blue-500/8 hover:border-blue-500/40 transition-all group hover:-translate-y-1"
             >
-              <div className="w-12 h-12 rounded-xl bg-slate-950/80 border border-white/10 flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform">
-                <Icon size={22} className={iconColor} strokeWidth={2.2} />
+              <div className="flex items-center justify-between mb-5">
+                <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200/50 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
+                  <Icon size={22} strokeWidth={2.4} />
+                </div>
+                <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-600">
+                  {tag}
+                </span>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
+              <h3 className="text-lg font-bold text-slate-900 mb-2 tracking-tight">
                 {title}
               </h3>
-              <p className="text-sm text-slate-400 leading-relaxed mb-4">
+              <p className="text-sm text-slate-600 leading-relaxed">
                 {description}
               </p>
             </motion.div>
@@ -127,9 +119,9 @@ export default function ServicesSection() {
         <div className="text-center">
           <Link
             href="/services"
-            className="btn btn-secondary py-3 px-6 text-sm inline-flex items-center gap-2"
+            className="btn btn-outline py-3 px-6 text-sm inline-flex items-center gap-2"
           >
-            <span>Explore All Capabilities</span>
+            <span>View All Operational Capabilities</span>
             <ArrowRight size={15} />
           </Link>
         </div>

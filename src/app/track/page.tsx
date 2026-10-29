@@ -64,7 +64,7 @@ export default function TrackPage() {
                   title: 'Track Location',
                   desc: 'View which hub currently holds your shipment and the estimated delivery date.',
                 },
-              ].map(({ icon: Icon, title, desc }, i) => (
+              ].map(({ icon: Icon, title, desc }) => (
                 <div key={title} className="card p-5 text-center">
                   <div className="flex items-center justify-center mb-3">
                     <div
@@ -74,7 +74,7 @@ export default function TrackPage() {
                         color: 'var(--color-blue)',
                       }}
                     >
-                      {i + 1}
+                      <Icon size={20} />
                     </div>
                   </div>
                   <h3 className="font-semibold text-sm mb-1" style={{ color: 'var(--color-text)' }}>

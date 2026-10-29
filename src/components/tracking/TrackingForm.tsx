@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'motion/react'
-import { Search, Package, AlertCircle, ArrowRight, Sparkles } from 'lucide-react'
+import { Search, Package, AlertCircle, Sparkles } from 'lucide-react'
 
 const TRACKING_NUMBER_RE = /^[A-Z0-9]{8,20}$/
 
@@ -12,9 +12,9 @@ function normalizeTracking(raw: string): string {
 }
 
 const DEMO_PRESETS = [
-  { id: 'SD123456789', label: 'In Transit', color: 'border-sky-500/40 text-sky-300' },
-  { id: 'SD987654321', label: 'Delivered', color: 'border-emerald-500/40 text-emerald-300' },
-  { id: 'SD555000111', label: 'Exception', color: 'border-amber-500/40 text-amber-300' },
+  { id: 'SD123456789', label: 'In Transit', badge: 'bg-blue-50 text-blue-700 border-blue-200' },
+  { id: 'SD987654321', label: 'Delivered', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+  { id: 'SD555000111', label: 'Exception', badge: 'bg-amber-50 text-amber-700 border-amber-200' },
 ]
 
 interface TrackingFormProps {
@@ -36,7 +36,7 @@ export default function TrackingForm({
 
   const validate = (v: string): string | null => {
     const normalized = normalizeTracking(v)
-    if (!normalized) return 'Please enter your tracking number.'
+    if (!normalized) return 'Please enter your consignment or tracking number.'
     if (!TRACKING_NUMBER_RE.test(normalized)) {
       return 'Tracking numbers are 8–20 alphanumeric characters (e.g. SD123456789).'
     }
@@ -74,12 +74,12 @@ export default function TrackingForm({
       onSubmit={handleSubmit}
       className={`w-full ${className}`}
       noValidate
-      aria-label="Shipment tracking form"
+      aria-label="Consignment tracking form"
     >
       <div className="flex flex-col sm:flex-row gap-2.5">
         <div className="relative flex-1">
-          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-sky-400">
-            <Package size={18} strokeWidth={2.2} />
+          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-blue-600">
+            <Package size={18} strokeWidth={2.4} />
           </div>
           <input
             ref={inputRef}
@@ -90,10 +90,10 @@ export default function TrackingForm({
               if (error) setError(null)
             }}
             placeholder="Enter tracking number (e.g. SD123456789)"
-            className={`w-full pl-11 pr-4 py-3.5 rounded-xl text-sm font-mono tracking-wider transition-all outline-none bg-slate-950/80 border text-white placeholder:text-slate-500 placeholder:font-sans ${
+            className={`w-full pl-11 pr-4 py-3.5 rounded-xl text-sm font-mono tracking-wider transition-all outline-none bg-slate-50 border text-slate-900 placeholder:text-slate-400 placeholder:font-sans ${
               error
-                ? 'border-red-500/80 focus:border-red-400 focus:ring-2 focus:ring-red-500/20'
-                : 'border-white/10 focus:border-sky-400 focus:ring-2 focus:ring-sky-500/20'
+                ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-100'
+                : 'border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100'
             }`}
             aria-label="Tracking number"
             aria-describedby={error ? 'tracking-error' : undefined}
@@ -108,7 +108,7 @@ export default function TrackingForm({
         <button
           type="submit"
           disabled={loading}
-          className="btn btn-orange py-3.5 px-6 font-semibold flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 rounded-xl cursor-pointer"
+          className="btn btn-royal py-3.5 px-6 font-semibold flex items-center justify-center gap-2 shadow-md shadow-blue-500/25 rounded-xl cursor-pointer"
         >
           {loading ? (
             <>
@@ -124,15 +124,15 @@ export default function TrackingForm({
         </button>
       </div>
 
-      {/* Validation Feedback */}
+      {/* Error alert */}
       <AnimatePresence>
         {error && (
           <motion.div
             id="tracking-error"
-            initial={{ opacity: 0, y: -6, height: 0 }}
+            initial={{ opacity: 0, y: -4, height: 0 }}
             animate={{ opacity: 1, y: 0, height: 'auto' }}
-            exit={{ opacity: 0, y: -6, height: 0 }}
-            className="flex items-center gap-2 mt-2.5 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs"
+            exit={{ opacity: 0, y: -4, height: 0 }}
+            className="flex items-center gap-2 mt-2.5 px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-red-600 text-xs"
             role="alert"
           >
             <AlertCircle size={14} className="flex-shrink-0" />
@@ -143,21 +143,21 @@ export default function TrackingForm({
 
       {/* Demo Quick-Chips */}
       {isHero && (
-        <div className="mt-3.5 pt-3 border-t border-white/5 flex flex-wrap items-center gap-2">
-          <span className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-            <Sparkles size={11} className="text-amber-400" />
+        <div className="mt-3 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2">
+          <span className="text-[11px] font-mono text-slate-500 flex items-center gap-1">
+            <Sparkles size={11} className="text-amber-500" />
             Demo Presets:
           </span>
           <div className="flex flex-wrap items-center gap-1.5">
-            {DEMO_PRESETS.map(({ id, label, color }) => (
+            {DEMO_PRESETS.map(({ id, label, badge }) => (
               <button
                 key={id}
                 type="button"
                 onClick={() => handleSelectPreset(id)}
-                className={`text-[11px] font-mono px-2 py-0.5 rounded-md bg-white/5 hover:bg-white/10 border transition-all cursor-pointer ${color}`}
+                className={`text-[11px] font-mono px-2 py-0.5 rounded-md border transition-all cursor-pointer hover:shadow-xs ${badge}`}
               >
                 <span>{id}</span>
-                <span className="opacity-60 ml-1">({label})</span>
+                <span className="opacity-70 ml-1">({label})</span>
               </button>
             ))}
           </div>

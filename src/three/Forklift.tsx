@@ -1,7 +1,5 @@
 'use client'
 
-import * as THREE from 'three'
-
 interface ForkliftProps {
   position?: [number, number, number]
   rotation?: [number, number, number]
