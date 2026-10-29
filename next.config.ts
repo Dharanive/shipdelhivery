@@ -1,17 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
-  turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
-    },
+  experimental: {
+    // App Router is stable in Next.js 13+
   },
+  images: {
+    remotePatterns: [],
+  },
+  // Transpile Three.js and related packages
+  transpilePackages: ["three"],
 };
 
 export default nextConfig;

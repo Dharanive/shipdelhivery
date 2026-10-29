@@ -1,36 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ShipDelhivery — Modern Logistics & Parcel Tracking Platform
 
-## Getting Started
+ShipDelhivery is a full-stack, responsive logistics and parcel-tracking application built with Next.js App Router, React Three Fiber (Three.js), Tailwind CSS, Motion for React, and Supabase PostgreSQL.
 
-First, run the development server:
+---
+
+## 🚀 Key Features
+
+- **Stylized Isometric 3D Warehouse Hero**: Procedural Three.js scene featuring animated conveyor belts, cardboard parcels following dynamic paths, sorting stations with scanning pulse effects, warehouse racks with pallets, and delivery trucks.
+- **Robust Tracking System**: Real-time status lookups with sanitized public tracking event history, timeline visualizations, and input validation.
+- **Warehouse Operations (Staff)**: Dedicated portal for warehouse personnel with incoming queues, shipment inspection, and barcode/manual scanning workflows.
+- **Admin Command Center**: Executive metrics overview, hub management, role assignments, and audit logging.
+- **Resilient Fallback**: Graceful degradation to an accessible CSS-only isometric fallback when WebGL is unavailable, with full support for `prefers-reduced-motion`.
+- **Zero Paid Dependencies**: Built entirely using procedural geometry, free-tier Supabase, and standard open-source libraries.
+
+---
+
+## 🛠️ Technology Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript (Strict Mode)
+- **Styling**: Tailwind CSS 4 + Custom Design Tokens (Midnight navy `#0B1220`, Electric blue `#38BDF8`, Cargo orange `#FB923C`)
+- **3D Graphics**: Three.js, `@react-three/fiber`, `@react-three/drei`
+- **Animations**: Motion for React (`motion/react`)
+- **Database & Auth**: Supabase PostgreSQL with Row Level Security (RLS) & `@supabase/ssr`
+- **Validation**: Zod
+- **Icons**: Lucide React
+- **Testing**: Vitest (Unit) & Playwright (E2E)
+- **Package Manager**: pnpm
+
+---
+
+## 📦 Getting Started
+
+### 1. Prerequisites
+
+- Node.js 20+
+- pnpm (`npm install -g pnpm`)
+
+### 2. Installation
+
+Clone the repository and install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Environment Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Copy `.env.example` to `.env.local`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cp .env.example .env.local
+```
 
-## Learn More
+Configure your environment variables in `.env.local`:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 4. Running the Development Server
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+pnpm dev
+```
 
-## Deploy on Vercel
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🧪 Available Scripts
+
+| Command | Description |
+|---|---|
+| `pnpm dev` | Starts the Next.js development server |
+| `pnpm build` | Compiles and builds the production application |
+| `pnpm start` | Starts the production server |
+| `pnpm type-check` | Runs TypeScript compiler in `--noEmit` mode |
+| `pnpm test` | Runs unit tests using Vitest |
+| `pnpm test:watch`| Runs Vitest in interactive watch mode |
+| `pnpm test:e2e` | Runs end-to-end tests using Playwright |
+| `pnpm lint` | Runs ESLint across the codebase |
+
+---
+
+## 📁 Project Structure
+
+```
+├── src/
+│   ├── app/                 # Next.js App Router pages & API routes
+│   │   ├── api/tracking/    # Public tracking API with rate limiting
+│   │   ├── services/        # Services catalog page
+│   │   ├── track/           # Customer parcel tracking & result view
+│   │   ├── warehouse/       # Warehouse staff portal & scanning
+│   │   ├── admin/           # Administrative command center
+│   │   └── auth/login/      # Staff authentication
+│   ├── components/
+│   │   ├── layout/          # Navigation, Footer, layouts
+│   │   ├── tracking/        # TrackingForm, TrackingResult, Timeline
+│   │   ├── sections/        # Homepage hero, stats, services, features
+│   │   └── dashboard/       # DashboardShell, metric cards
+│   ├── features/
+│   │   └── shipments/       # Status definitions, transition rules, logic
+│   ├── three/               # 3D procedural warehouse components (R3F)
+│   └── types/               # Domain TypeScript interfaces & types
+├── supabase/
+│   ├── migrations/          # PostgreSQL migrations with RLS policies
+│   └── seed.sql             # Labeled demo seed dataset
+├── tests/
+│   ├── unit/                # Vitest unit test suites
+│   └── e2e/                 # Playwright integration specs
+├── .env.example             # Environment variable template
+└── vitest.config.ts         # Vitest configuration
+```
+
+---
+
+## 🔒 Security Architecture
+
+- **Row Level Security (RLS)**: Enforced across all Supabase tables (`warehouses`, `profiles`, `shipments`, `tracking_events`, `audit_logs`).
+- **Data Minimization**: Public tracking endpoints only return sanitized projections (cities, timestamps, status milestones), preventing PII leakage.
+- **Strict Role-Based Authorization**: Roles (`admin`, `warehouse_staff`) validated server-side.
+- **In-Memory Rate Limiting**: Protects public tracking lookup endpoints against scraping and abuse.
